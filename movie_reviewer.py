@@ -52,6 +52,10 @@ root.geometry("600x500")
 text_area = tk.Text(root, height=15, width=70, wrap='word')
 text_area.pack(pady=10)
 
+#Add placeholder text
+placeholder_text = "Write your review here..."
+text_area.insert(tk.END, placeholder_text)
+
 prepper = ReviewPrepper()
 def classify_review():
     review = text_area.get("1.0", tk.END).strip()
