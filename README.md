@@ -32,17 +32,19 @@ for easy testing of reviews.
    pip install scikit-learn
    ```
 ## How to Use
+
 ### Train or Load Model
 The app will automatically:
 Load an existing model from saved_model / Or train a new one if no saved model exists
 
 From the terminal enter:
+
 ```bash
 python movie_reviewer.py
 ```
 In the GUI:
 Paste a movie review into the text box OR Click the gray area to load a .txt review file
 
-Click "Classify Review" to predict the reviews sentiment
+Click "Classify Review" to predict the review's sentiment
 ## License
 This project is licensed under the MIT License.
