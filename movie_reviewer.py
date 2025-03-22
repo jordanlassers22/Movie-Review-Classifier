@@ -59,7 +59,7 @@ text_area.insert(tk.END, placeholder_text)
 prepper = ReviewPrepper()
 def classify_review():
     review = text_area.get("1.0", tk.END).strip()
-    if not review:
+    if not review or review == placeholder_text:
         messagebox.showwarning("Blank input", "Please write or paste a review.")
         return
     
