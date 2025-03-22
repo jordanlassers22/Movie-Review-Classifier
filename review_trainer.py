@@ -6,6 +6,12 @@ import numpy as np
 
 
 def train_model():
+    """
+    Trains a Keras model on movie reviews.
+    Returns:
+        model: Keras model
+        top_10000_words: List of the most frequent 10000 words in the training data. 
+    """
     #Check if Keras is using a GPU (via TensorFlow)
     gpu_count = len(tf.config.list_physical_devices('GPU'))
     if gpu_count > 0:
