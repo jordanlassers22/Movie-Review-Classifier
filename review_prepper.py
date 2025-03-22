@@ -2,15 +2,13 @@ import os
 import re #Regex library
 import random
 
-#Modify load and tokenize reviews to return labels based off filename
 class ReviewPrepper:
     
     def __init__(self):
         self.negation_words = [
             "no", "not", "neither", "nor", "none", 
             "nobody", "nothing", "nowhere", "never", 
-            "barely", "hardly", "scarcely", "seldom", "rarely", "cant", "cannot"
-        ]
+            "barely", "hardly", "scarcely", "seldom", "rarely", "cant", "cannot"]
         
         self.stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 
         'ourselves', 'you', "youre", "youve", "youll", "youd", 'your', 'yours', 'yourself', 
@@ -67,7 +65,7 @@ class ReviewPrepper:
     
         #Loop through 'pos' and 'neg' subdirectories
         for subdirectory in ["pos", "neg"]:
-            dir_path = os.path.join(base_directory, subdirectory)  #Construct path to subdirectory
+            dir_path = os.path.join(base_directory, subdirectory)
             if not os.path.exists(dir_path):
                 continue  #Skip if the subdirectory does not exist
                 
@@ -131,25 +129,25 @@ class ReviewPrepper:
         Returns:
             DataFrame where columns are top_words and rows are binary feature vectors.
         """
-        # Initialize an empty list to collect feature vectors
+        #Initialize an empty list for feature vectors
         feature_vectors = []
     
-        # Create word-to-index mapping
+        #Create map word to index
         word_index = {}
         for i, word in enumerate(top_words):
             word_index[word] = i
     
-        # Process each review
+        #Process each review
         for review in tokenized_reviews:
-            # Initialize feature vector for the current review
-            feature_vector = [0] * len(top_words)  # Binary vector of zeros
+            #Initialize feature vector for the current review
+            feature_vector = [0] * len(top_words)  #Binary vector of zeros
             
-            # Mark presence of words in the review
+            #Mark presence of words in the review
             for token in review:
                 if token in word_index:
                     feature_vector[word_index[token]] = 1
             
-            # Add feature vector to the list
+            #Add feature vector to the list
             feature_vectors.append(feature_vector)
         
         

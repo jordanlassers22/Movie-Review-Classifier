@@ -20,7 +20,7 @@ def train_model():
     else:
         print("No GPUs available, reverting to CPU")
     
-    prepper = ReviewPrepper() #Instantiate custom review object
+    prepper = ReviewPrepper() #Instantiate custom review prepper object
     
     #Get training data
     tokenized_training_reviews, y_train = prepper.load_and_tokenize_reviews("train", shuffle_results=True) #Load and preprocess training data
@@ -29,7 +29,7 @@ def train_model():
     
     #Get testing data
     tokenized_testing_reviews, y_test = prepper.load_and_tokenize_reviews("test", shuffle_results=True) #Load and preprocess testing data
-    X_test = prepper.prepare_data_for_model(top_10000_words, tokenized_testing_reviews) #Convert tokenized testing reviews using the same top words
+    X_test = prepper.prepare_data_for_model(top_10000_words, tokenized_testing_reviews) #Convert tokenized testing reviews using the same top words as training data
     
     #Convert data to numpy arrays
     X_train = np.array(X_train)
@@ -39,12 +39,14 @@ def train_model():
     
     #Create Keras Model
     model = keras.Sequential([
-        keras.layers.Input(shape=(X_train.shape[1],)), #Input layer with feature vector size
-        keras.layers.Dense(128, activation='relu'), #First hidden layer
-        keras.layers.Dropout(0.3), #Dropout to prevent overfitting
-        keras.layers.Dense(64, activation='relu'), #Second hidden layer
-        keras.layers.Dense(1, activation='sigmoid')  #Binary classification
-    ])
+            keras.layers.Input(shape=(X_train.shape[1],)),
+            keras.layers.Dense(512, activation='relu'),
+            keras.layers.Dropout(0.3),
+            keras.layers.Dense(256, activation='relu'),
+            keras.layers.Dropout(0.3),
+            keras.layers.Dense(256, activation='relu'),
+            keras.layers.Dense(1, activation='sigmoid')
+        ])
     
     model.compile(
         optimizer='adam',
@@ -53,16 +55,16 @@ def train_model():
     )
     
     #Early stopping to stop training when validation loss stops improving
-    early_stop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+    early_stop = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True) #restore_best_weights makes sure model uses best performing weights
     
     #Train the model on the training data, validate on the test data
     history = model.fit(
-        X_train, y_train,
-        validation_data=(X_test, y_test),
-        epochs=20,
-        batch_size=32,
-        callbacks=[early_stop],
-        verbose=1)
+            X_train, y_train,
+            validation_data=(X_test, y_test),
+            epochs=20,
+            batch_size=128,  
+            callbacks=[early_stop],
+            verbose=1)
     
     #Show final model performance
     loss, accuracy = model.evaluate(X_test, y_test)
